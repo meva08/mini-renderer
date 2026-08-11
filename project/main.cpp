@@ -10,8 +10,8 @@ constexpr TGAColor blue    = {255, 128,  64, 255};
 constexpr TGAColor yellow  = {  0, 200, 255, 255};
 
 // globals
-constexpr int width  = 128;
-constexpr int height = 128;
+constexpr int width  = 800;
+constexpr int height = 800;
 
 void drawLine(int ax, int ay, int bx, int by, TGAImage &image, const TGAColor &color);
 void drawMesh(Mesh m, TGAImage &image);
@@ -33,10 +33,7 @@ int main(int argc, char** argv) {
 
     Mesh m;
     m.readOBJ(argv[1]);
-
-    triangle(  7, 45, 35, 100, 45,  60, framebuffer, red);
-    triangle(120, 35, 90,   5, 45, 110, framebuffer, white);
-    triangle(115, 83, 80,  90, 85, 120, framebuffer, green);
+    drawMesh(m, framebuffer);
 
     framebuffer.write_tga_file("framebuffer.tga");
     return 0;
@@ -101,15 +98,11 @@ void drawTriangle(vertex v0, vertex v1, vertex v2, TGAImage &image)
     vertex vp1 = project(v1);
     vertex vp2 = project(v2);
 
-    // draw triangle points
-    image.set(vp0.x, vp0.y, white);
-    image.set(vp1.x, vp1.y, white);
-    image.set(vp2.x, vp2.y, white);
+    // random color
+    TGAColor rnd;
+    for (int c=0; c<3; c++) rnd[c] = std::rand()%255;
 
-    // draw lines between them
-    drawLine(vp0.x, vp0.y, vp1.x, vp1.y, image, blue);
-    drawLine(vp1.x, vp1.y, vp2.x, vp2.y, image, blue);
-    drawLine(vp2.x, vp2.y, vp0.x, vp0.y, image, blue);
+    triangle(vp0.x, vp0.y, vp1.x, vp1.y, vp2.x, vp2.y, image, rnd);
 }
 
 void triangle(int ax, int ay, int bx, int by, int cx, int cy, TGAImage &image, const TGAColor &color)
